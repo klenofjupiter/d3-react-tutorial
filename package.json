@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "d3": "^5.5.0",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react": "^16.7.0-alpha",
+    "react-dom": "^16.7.0-alpha",
     "react-scripts": "1.1.4"
   },
   "scripts": {
