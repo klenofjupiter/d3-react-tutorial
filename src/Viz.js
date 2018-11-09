@@ -3,23 +3,20 @@ import * as d3 from 'd3';
 
 
 export default class Viz extends Component {
-  constructor() {
-  	super();
-  	this.draw = this.draw.bind(this);
-  }
 
   componentDidMount() {
   	this.draw(this.props)
   }
-  shouldComponentUpdate() {
-    return false;
+  componentDidUpdate(prevProps){
+    //this makes sure we don't redraw unnecessarily --
+    //only when we add a new shape
+    if(this.props.shapes.length !== prevProps.shapes.length){
+      d3.select('.viz > *').remove();
+      this.draw(this.props)
+    }
+
   }
-  componentWillReceiveProps(nextProps) {
-  	if(this.props.shapes.length !== nextProps.shapes.length){
-  	  d3.select('.viz > *').remove();
-  	  this.draw(nextProps)
-  	}
-  }
+
 
   render() {
     return (
@@ -27,7 +24,7 @@ export default class Viz extends Component {
     )
   }
   
-  draw(props) {
+  draw = (props) => {
     const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     d3.select('.viz').append('svg')
@@ -36,16 +33,7 @@ export default class Viz extends Component {
     .attr('id', 'svg-viz')
 
     const bubbles = props.shapes
-  	let min = bubbles[0].number
-  	let max = bubbles[0].number
-  	for (let i = 1 ; i < bubbles.length; i ++){
-  		if (bubbles[i].number > max) {
-  		  max = bubbles[i].number
-  		}
-  		if(bubbles[i].number < min) {
-  		  min = bubbles[i].number
-  		}
-  	}
+    const max = d3.max(bubbles)
   	const radiusScale = d3.scaleSqrt().domain([0, max]).range([0, max])
 
   	const simulation = d3.forceSimulation()
